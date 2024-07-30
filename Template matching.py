@@ -1,33 +1,35 @@
-from tkinter import filedialog
-import cv2
-import matplotlib.pyplot as plt
-from tkinter import *
+import tkinter as tk
+from tkinter import filedialog, ttk
 from PIL import Image, ImageTk
 
-root = Tk()
-root.geometry("500x500")
-
-class Root():
+class HospitalInterface(tk.Tk):
     def __init__(self):
-        super(Root, self).__init__()
+        super().__init__()
+
         self.title("HOSPITAL INTERFACE")
-        self.minimise(640, 400)
-        self.wm_iconbitmap('icon.ico')
+        self.geometry("640x400")
+        self.iconbitmap('icon.ico')
 
-        self.labelFrame = ttk.labelFrame(self, text="Open a File")
-        self.labelFrame.grid(column=0, row=1, padx=20, pady=20)
-        self.button()
+        self.label_frame = ttk.LabelFrame(self, text="Open a File")
+        self.label_frame.grid(column=0, row=1, padx=20, pady=20)
 
+        self.create_button()
 
-        def showimg(self):
-            result = filedialog.askopenfile()
-            load = Image.open(result)
-            render = ImageTk.photoImage(load)
-            img = Label(self, image=render)
-            img.image = render
-            img.place(x=0, y=0)
+        self.img_label = tk.Label(self)
+        self.img_label.grid(column=0, row=0)
 
+    def create_button(self):
+        button = ttk.Button(self.label_frame, text="Open Image", command=self.show_img)
+        button.grid(column=0, row=0)
 
+    def show_img(self):
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            image = Image.open(file_path)
+            photo = ImageTk.PhotoImage(image)
+            self.img_label.config(image=photo)
+            self.img_label.image = photo  # Keep a reference to avoid garbage collection
 
 if __name__ == '__main__':
-
+    app = HospitalInterface()
+    app.mainloop()
